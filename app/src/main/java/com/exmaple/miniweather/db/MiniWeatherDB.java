@@ -18,7 +18,7 @@ public class MiniWeatherDB {
     private SQLiteDatabase db;
     private static MiniWeatherDB miniWeatherDB;
 
-    public MiniWeatherDB(Context context){
+    private MiniWeatherDB(Context context){
         MiniWeatherOpenHelper dbHelper=new MiniWeatherOpenHelper(context,DB_NAME,null,VERSION);
         db=dbHelper.getWritableDatabase();
     }
@@ -46,6 +46,7 @@ public class MiniWeatherDB {
                 province.setId(cursor.getInt(cursor.getColumnIndex("id")));
                 province.setProvinceCode(cursor.getString(cursor.getColumnIndex("provinceCode")));
                 province.setProvinceName(cursor.getString(cursor.getColumnIndex("provinceName")));
+                list.add(province);
 
             }while(cursor.moveToNext());
         }
@@ -60,9 +61,9 @@ public class MiniWeatherDB {
         db.insert("City",null,values);
     }
 
-    public List<City> loadCity(){
+    public List<City> loadCity(int provinceId){
         List<City> list=new ArrayList<City>();
-        Cursor cursor=db.query("City",null,null,null,null,null,null);
+        Cursor cursor=db.query("City",null,"province_id=?",new String[]{String.valueOf(provinceId)},null,null,null);
         if(cursor.moveToFirst()){
             do{
                 City city=new City();
@@ -83,9 +84,9 @@ public class MiniWeatherDB {
         db.insert("County",null,values);
     }
 
-    public List<County> loadCounty(){
+    public List<County> loadCounty(int cityId){
         List<County> list=new ArrayList<County>();
-        Cursor cursor=db.query("County",null,null,null,null,null,null);
+        Cursor cursor=db.query("County",null,"city_id=?",new String[]{String.valueOf(cityId)},null,null,null);
         if(cursor.moveToFirst()){
             do{
                 County county=new County();
