@@ -1,4 +1,4 @@
-package com.exmaple.miniweather.db;
+package com.exmaple.miniweather.model;
 
 /**
  * Created by apple on 16/2/5.

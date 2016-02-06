@@ -2,13 +2,11 @@ package com.exmaple.miniweather.util;
 
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.exmaple.miniweather.activity.ChooseAreaActivity;
-import com.exmaple.miniweather.db.City;
-import com.exmaple.miniweather.db.County;
+import com.exmaple.miniweather.model.City;
+import com.exmaple.miniweather.model.County;
 import com.exmaple.miniweather.db.MiniWeatherDB;
-import com.exmaple.miniweather.db.Province;
+import com.exmaple.miniweather.model.Province;
 
 /**
  * Created by apple on 16/2/5.
@@ -20,7 +18,6 @@ public class Utility {
      */
     public static synchronized boolean handleProvinceResponse(MiniWeatherDB miniWeatherDB, String response){
         if(!TextUtils.isEmpty(response)){
-            Log.d("SZW",response);
             String[] allProvinces=response.split(",");
             if(allProvinces!=null && allProvinces.length>0){
                 for(String p:allProvinces){

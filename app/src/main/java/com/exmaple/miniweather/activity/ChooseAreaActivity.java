@@ -13,10 +13,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.exmaple.miniweather.R;
-import com.exmaple.miniweather.db.City;
-import com.exmaple.miniweather.db.County;
+import com.exmaple.miniweather.model.City;
+import com.exmaple.miniweather.model.County;
 import com.exmaple.miniweather.db.MiniWeatherDB;
-import com.exmaple.miniweather.db.Province;
+import com.exmaple.miniweather.model.Province;
 import com.exmaple.miniweather.util.HttpCallBackListener;
 import com.exmaple.miniweather.util.HttpUtil;
 import com.exmaple.miniweather.util.Utility;
@@ -70,6 +70,7 @@ public class ChooseAreaActivity extends AppCompatActivity {
                 }
             }
         });
+        miniWeatherDB.deleteProvince();
         queryProvinces();
     }
 
@@ -150,7 +151,7 @@ public class ChooseAreaActivity extends AppCompatActivity {
                 }else if(type.equals("city")){
                     result=Utility.handleCityResponse(miniWeatherDB, response, selectedProvince.getId());
                 }else if(type.equals("county")){
-                    result=Utility.handleCountyResponse(miniWeatherDB,response,selectedCounty.getId());
+                    result=Utility.handleCountyResponse(miniWeatherDB,response,selectedCity.getId());
                 }
                 if(result){
                     //回到主线程处理UI逻辑
