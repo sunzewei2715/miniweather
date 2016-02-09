@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.exmaple.miniweather.R;
+import com.exmaple.miniweather.service.AutoUpdateService;
 import com.exmaple.miniweather.util.HttpCallBackListener;
 import com.exmaple.miniweather.util.HttpUtil;
 import com.exmaple.miniweather.util.Utility;
@@ -142,9 +143,11 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         temp1.setText(preferences.getString("temp1",""));
         temp2.setText(preferences.getString("temp2",""));
         publishTime.setText("今天"+preferences.getString("publish_time","")+"发布");
-        currentDate.setText(preferences.getString("current_date",""));
+        currentDate.setText(preferences.getString("current_date", ""));
         cityName.setVisibility(View.VISIBLE);
         weatherInfoLayout.setVisibility(View.VISIBLE);
+        Intent intent=new Intent(this, AutoUpdateService.class);
+        startService(intent);
     }
 
 }
