@@ -1,6 +1,8 @@
 package com.exmaple.miniweather.activity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -46,10 +48,21 @@ public class ChooseAreaActivity extends AppCompatActivity {
     private List<City> cityList;
     private List<County> countyList;
 
+    private Boolean isCitySelected;
+    private Boolean isFromWeatherActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences preferences=getSharedPreferences("data", MODE_PRIVATE);
+        isCitySelected=preferences.getBoolean("city_selected", false);
+        isFromWeatherActivity=getIntent().getBooleanExtra("from_weather_activity", false);
+        if(isCitySelected && !isFromWeatherActivity){
+            Intent intent=new Intent(this,WeatherActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.choose_area);
         miniWeatherDB=MiniWeatherDB.getInstance(this);
@@ -67,6 +80,13 @@ public class ChooseAreaActivity extends AppCompatActivity {
                 } else if (CURRENT_LEVEL == CITY_LEVEL) {
                     selectedCity = cityList.get(position);
                     queryCounties();
+                }else if (CURRENT_LEVEL == COUNTY_LEVEL) {
+                    selectedCounty=countyList.get(position);
+                    String countyCode=selectedCounty.getCountyCode();
+                    Intent intent=new Intent(ChooseAreaActivity.this,WeatherActivity.class);
+                    intent.putExtra("county_code", countyCode);
+                    startActivity(intent);
+                    finish();
                 }
             }
         });
@@ -215,7 +235,11 @@ public class ChooseAreaActivity extends AppCompatActivity {
             queryCities();
         }else if(CURRENT_LEVEL==CITY_LEVEL){
             queryProvinces();
-        }else{
+        }else if(CURRENT_LEVEL==PROVINCE_LEVEL){
+            if(isFromWeatherActivity){
+                Intent intent=new Intent(this,WeatherActivity.class);
+                startActivity(intent);
+            }
             finish();
         }
     }
