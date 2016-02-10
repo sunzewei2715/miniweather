@@ -1,6 +1,8 @@
 package com.exmaple.miniweather.activity;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
@@ -50,6 +52,7 @@ public class ChooseAreaActivity extends AppCompatActivity {
 
     private Boolean isCitySelected;
     private Boolean isFromWeatherActivity;
+    private Boolean isFromMyCityActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +60,10 @@ public class ChooseAreaActivity extends AppCompatActivity {
         SharedPreferences preferences=getSharedPreferences("data", MODE_PRIVATE);
         isCitySelected=preferences.getBoolean("city_selected", false);
         isFromWeatherActivity=getIntent().getBooleanExtra("from_weather_activity", false);
-        if(isCitySelected && !isFromWeatherActivity){
+        isFromMyCityActivity=getIntent().getBooleanExtra("from_my_city_activity",false);
+
+        //已选城市
+        if(isCitySelected && !isFromWeatherActivity && !isFromMyCityActivity){
             Intent intent=new Intent(this,WeatherActivity.class);
             startActivity(intent);
             finish();
@@ -65,6 +71,19 @@ public class ChooseAreaActivity extends AppCompatActivity {
         }
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.choose_area);
+
+        //未选城市
+        if(!isCitySelected){
+            AlertDialog.Builder dialog=new AlertDialog.Builder(this);
+            dialog.setMessage("请选择你的城市");
+            dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                }
+            });
+            dialog.show();
+        }
+
         miniWeatherDB=MiniWeatherDB.getInstance(this);
         textView=(TextView) findViewById(R.id.title_text);
         listView=(ListView) findViewById(R.id.list_view);
@@ -80,17 +99,29 @@ public class ChooseAreaActivity extends AppCompatActivity {
                 } else if (CURRENT_LEVEL == CITY_LEVEL) {
                     selectedCity = cityList.get(position);
                     queryCounties();
-                }else if (CURRENT_LEVEL == COUNTY_LEVEL) {
-                    selectedCounty=countyList.get(position);
-                    String countyCode=selectedCounty.getCountyCode();
-                    Intent intent=new Intent(ChooseAreaActivity.this,WeatherActivity.class);
-                    intent.putExtra("county_code", countyCode);
-                    startActivity(intent);
+                } else if (CURRENT_LEVEL == COUNTY_LEVEL) {
+                    selectedCounty = countyList.get(position);
+                    if (isFromMyCityActivity) {
+                        //添加到我的城市列表
+                        String newCity = selectedCounty.getCountyCode() + selectedCounty.getCountyName();
+                        Intent intent = new Intent(ChooseAreaActivity.this, MyCityActivity.class);
+                        intent.putExtra("new_city", newCity);
+                        startActivity(intent);
+                    } else {
+                        //普通选城市
+                        if(!isCitySelected){
+                            //将初选的默认添加到我的城市列表
+                            miniWeatherDB.saveMyCity(selectedCounty.getCountyCode()+selectedCounty.getCountyName());
+                        }
+                        String countyCode = selectedCounty.getCountyCode();
+                        Intent intent = new Intent(ChooseAreaActivity.this, WeatherActivity.class);
+                        intent.putExtra("county_code", countyCode);
+                        startActivity(intent);
+                    }
                     finish();
                 }
             }
         });
-        miniWeatherDB.deleteProvince();
         queryProvinces();
     }
 
@@ -238,6 +269,9 @@ public class ChooseAreaActivity extends AppCompatActivity {
         }else if(CURRENT_LEVEL==PROVINCE_LEVEL){
             if(isFromWeatherActivity){
                 Intent intent=new Intent(this,WeatherActivity.class);
+                startActivity(intent);
+            }else if(isFromMyCityActivity){
+                Intent intent=new Intent(this,MyCityActivity.class);
                 startActivity(intent);
             }
             finish();

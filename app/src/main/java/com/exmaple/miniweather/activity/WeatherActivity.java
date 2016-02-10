@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -30,6 +31,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private TextView currentDate;//日期
     private Button switchCity;//转换城市
     private Button refreshWeather;//更新天气
+    private Button myCity;
 
 
     @Override
@@ -46,6 +48,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         currentDate=(TextView) findViewById(R.id.current_date);
         switchCity=(Button) findViewById(R.id.switch_city);
         refreshWeather=(Button) findViewById(R.id.refresh_weather);
+        myCity=(Button) findViewById(R.id.my_city);
         String countyCode=getIntent().getStringExtra("county_code");
         if(!TextUtils.isEmpty(countyCode)){
             publishTime.setText("同步中");
@@ -57,6 +60,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         }
         switchCity.setOnClickListener(this);
         refreshWeather.setOnClickListener(this);
+        myCity.setOnClickListener(this);
     }
 
     @Override
@@ -75,6 +79,11 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 if(!TextUtils.isEmpty(weatherCode)){
                     queryWeatherInfo(weatherCode);
                 }
+                break;
+            case R.id.my_city:
+                Intent intent1=new Intent(this,MyCityActivity.class);
+                startActivity(intent1);
+                finish();
                 break;
             default:
                 break;

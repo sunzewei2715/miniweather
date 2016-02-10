@@ -6,7 +6,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="#00796B" >
+        android:background="#0097a7" >
         <Button
             android:id="@+id/switch_city"
             android:layout_width="30dp"
@@ -34,7 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="#009688" >
+        android:background="#00bcd4" >
         <TextView
             android:id="@+id/publish_text"
             android:layout_width="wrap_content"
@@ -95,5 +95,15 @@
                     android:textSize="30sp" />
             </LinearLayout>
         </LinearLayout>
+        <Button
+            android:id="@+id/my_city"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="70sp"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/shape"
+            android:textColor="#FFF"
+            android:text="我的城市"/>
     </RelativeLayout>
 </LinearLayout>

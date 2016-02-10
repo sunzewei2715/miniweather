@@ -117,7 +117,6 @@ public class Utility {
         SimpleDateFormat date=new SimpleDateFormat("yyyy年M月d日",Locale.CHINA);
         editor.putString("current_date",date.format(new Date()));
         editor.commit();
-
     }
 
 }

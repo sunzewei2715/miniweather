@@ -33,7 +33,7 @@ public class AutoUpdateService extends Service {
             }
         }).start();
         AlarmManager manager=(AlarmManager) getSystemService(ALARM_SERVICE);
-        int oneHour=60*60*1000;
+        int oneHour=60*60*1000;//一小时更新一次
         long triggerTime= SystemClock.elapsedRealtime()+oneHour;
         Intent i=new Intent(this, AutoUpdateReceiver.class);
         PendingIntent pi= PendingIntent.getBroadcast(this,0,i,0);

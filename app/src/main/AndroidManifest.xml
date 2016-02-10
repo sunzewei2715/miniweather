@@ -27,7 +27,9 @@
         <receiver
             android:name=".receiver.AutoUpdateReceiver"
             android:enabled="true"
-            android:exported="true"></receiver>
+            android:exported="true" />
+
+        <activity android:name=".activity.MyCityActivity"></activity>
     </application>
 
 </manifest>
